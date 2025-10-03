@@ -31,6 +31,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import { PromotionCalendar } from "./PromotionCalendar";
 
 interface Trigger {
   id: string;
@@ -59,6 +60,7 @@ export const PerformanceAgentView: React.FC = () => {
 
   const views = [
     { id: "overview", label: "System Overview" },
+    { id: "calendar", label: "Campaign Calendar" },
     { id: "perception", label: "Perception Layer" },
     { id: "reasoning", label: "Reasoning Engine" },
     { id: "actions", label: "Actions & Tools" },
@@ -776,6 +778,7 @@ export const PerformanceAgentView: React.FC = () => {
         </div>
 
         {activeView === "overview" && renderOverview()}
+        {activeView === "calendar" && <PromotionCalendar />}
         {activeView === "perception" && renderPerception()}
         {activeView === "reasoning" && renderReasoning()}
         {activeView === "actions" && renderActions()}
