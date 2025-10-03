@@ -721,11 +721,11 @@ export const PerformanceAgentView: React.FC = () => {
               <h2
                 className={`text-3xl font-bold ${themeClasses.text} bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent`}
               >
-                Performance Agent
+                Agency Performance Monitor
               </h2>
             </div>
             <p className={`${themeClasses.textSecondary}`}>
-              AI-Powered Campaign Monitoring & Optimization
+              Real-time Campaign Oversight for Marketing Agencies
             </p>
           </div>
           <div className="flex items-center space-x-4">
