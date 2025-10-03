@@ -28,6 +28,7 @@ const sidebarItems = [
   { id: 'simulations', label: 'Simulations & Optimization', icon: Layers3, color: 'text-green-600' },
   { id: 'agents', label: 'Agents', icon: Users, color: 'text-orange-600' },
   { id: 'performance', label: 'Performance Cockpit', icon: TrendingUp, color: 'text-red-600' },
+  { id: 'performanceagent', label: 'Performance Agent', icon: Activity, color: 'text-purple-600' },
   { id: 'admin', label: 'Admin Controls', icon: Shield, color: 'text-red-600' },
   { id: 'brandkit', label: 'Brand Kit', icon: PaletteIcon, color: 'text-indigo-600' },
   { id: 'integrations', label: 'Integrations', icon: Settings, color: 'text-green-600' },

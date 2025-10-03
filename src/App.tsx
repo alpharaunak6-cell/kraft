@@ -8,6 +8,7 @@ import { CreatorStudio } from './components/CreatorStudio';
 import { Simulations } from './components/Simulations';
 import { AgentManagement } from './components/AgentManagement';
 import { PerformanceCockpit } from './components/PerformanceCockpit';
+import { PerformanceAgentView } from './components/PerformanceAgentView';
 import { AdminControls } from './components/AdminControls';
 import { BrandKit } from './components/BrandKit';
 import { Integrations } from './components/Integrations';
@@ -37,6 +38,8 @@ function App() {
         return <AgentManagement />;
       case 'performance':
         return <PerformanceCockpit />;
+      case 'performanceagent':
+        return <PerformanceAgentView />;
       case 'admin':
         return <AdminControls />;
           case 'brandmanager':
