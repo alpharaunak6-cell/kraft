@@ -1,16 +1,17 @@
 import React from 'react';
-import { 
-  BarChart3, 
-  Users, 
-  Sparkles, 
-  Target, 
-  Settings, 
+import {
+  BarChart3,
+  Users,
+  Sparkles,
+  Target,
+  Settings,
   Layers3,
   TrendingUp,
   Shield,
   Palette as PaletteIcon,
   LogOut,
-  Activity
+  Activity,
+  Megaphone
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { ThemeSelector } from './ThemeSelector';
@@ -25,6 +26,7 @@ const sidebarItems = [
   { id: 'brandmanager', label: 'Brand Manager', icon: Activity, color: 'text-emerald-600' },
   { id: 'strategy', label: 'Campaign Studio', icon: Target, color: 'text-green-600' },
   { id: 'creator', label: 'Creator Studio', icon: Sparkles, color: 'text-blue-600' },
+  { id: 'marketingstudio', label: 'Marketing Studio', icon: Megaphone, color: 'text-teal-600' },
   { id: 'simulations', label: 'Simulations & Optimization', icon: Layers3, color: 'text-green-600' },
   { id: 'agents', label: 'Agents', icon: Users, color: 'text-orange-600' },
   { id: 'performance', label: 'Performance Cockpit', icon: TrendingUp, color: 'text-red-600' },
