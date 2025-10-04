@@ -1,36 +1,5 @@
 import React, { useState } from "react";
-import {
-  CheckCircle,
-  Calendar,
-  Play,
-  Pause,
-  TrendingUp,
-  Eye,
-  MousePointer,
-  DollarSign,
-  Target,
-  Sparkles,
-  Image as ImageIcon,
-  Video,
-  FileText,
-  Download,
-  Edit3,
-  Copy,
-  Trash2,
-  Settings,
-  BarChart3,
-  AlertTriangle,
-  ThumbsUp,
-  Clock,
-  Users,
-  Globe,
-  Activity,
-  Zap,
-  Bot,
-  ArrowRight,
-  ChevronRight,
-  ExternalLink,
-} from "lucide-react";
+import { CheckCircle, Calendar, Play, Pause, TrendingUp, Eye, MousePointer, DollarSign, Target, Sparkles, Image as ImageIcon, Video, FileText, Download, CreditCard as Edit3, Copy, Trash2, Settings, BarChart3, AlertTriangle, ThumbsUp, Clock, Users, Globe, Activity, Zap, Bot, ArrowRight, ChevronRight, ExternalLink } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import { PromotionCalendar } from "./PromotionCalendar";
 
