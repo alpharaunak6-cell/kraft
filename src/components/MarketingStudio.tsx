@@ -1,5 +1,43 @@
 import React, { useState } from "react";
-import { CheckCircle, Calendar, Play, Pause, TrendingUp, Eye, MousePointer, DollarSign, Target, Sparkles, Image as ImageIcon, Video, FileText, Download, CreditCard as Edit3, Copy, Trash2, Settings, BarChart3, AlertTriangle, ThumbsUp, Clock, Users, Globe, Activity, Zap, Bot, ArrowRight, ChevronRight, ExternalLink } from "lucide-react";
+import {
+  CheckCircle,
+  Calendar,
+  Play,
+  Pause,
+  TrendingUp,
+  Eye,
+  MousePointer,
+  DollarSign,
+  Target,
+  Sparkles,
+  Image as ImageIcon,
+  Video,
+  FileText,
+  Download,
+  Edit3,
+  Copy,
+  Trash2,
+  Settings,
+  BarChart3,
+  AlertTriangle,
+  ThumbsUp,
+  Clock,
+  Users,
+  Globe,
+  Activity,
+  Zap,
+  Bot,
+  ArrowRight,
+  ChevronRight,
+  ExternalLink,
+  Filter,
+  Search,
+  CalendarCheck,
+  FolderOpen,
+  TrendingDown,
+  AlertCircle,
+  Plus,
+} from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import { PromotionCalendar } from "./PromotionCalendar";
 
@@ -32,13 +70,15 @@ interface Campaign {
 export const MarketingStudio: React.FC = () => {
   const { getThemeClasses } = useTheme();
   const themeClasses = getThemeClasses();
-  const [activeSection, setActiveSection] = useState<"details" | "optimization" | "execution" | "performance">("details");
+  const [activeSection, setActiveSection] = useState<"details" | "scheduler" | "execution" | "performance">("details");
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [campaignStatus, setCampaignStatus] = useState<"paused" | "running">("paused");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const sections = [
-    { id: "details", label: "Campaign Details", icon: FileText },
-    { id: "optimization", label: "Optimization", icon: Target },
+    { id: "details", label: "Campaign Overview", icon: FolderOpen },
+    { id: "scheduler", label: "Campaign Scheduler", icon: CalendarCheck },
     { id: "execution", label: "Run Campaign", icon: Play },
     { id: "performance", label: "Performance Monitor", icon: BarChart3 },
   ];
@@ -106,6 +146,78 @@ export const MarketingStudio: React.FC = () => {
           name: "Social Media Card",
           status: "approved",
           thumbnail: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400",
+        },
+      ],
+    },
+    {
+      id: "camp-003",
+      name: "Product Launch Teaser",
+      status: "approved",
+      objective: "Generate buzz for new product launch",
+      budget: 25000,
+      startDate: "2025-10-20",
+      endDate: "2025-11-10",
+      platforms: ["Twitter", "LinkedIn", "Facebook"],
+      audience: "Tech enthusiasts, Early adopters",
+      creatives: [
+        {
+          id: "cr-007",
+          type: "video",
+          name: "Teaser Video 15s",
+          status: "approved",
+        },
+        {
+          id: "cr-008",
+          type: "image",
+          name: "Product Teaser Banner",
+          status: "approved",
+          thumbnail: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=400",
+        },
+      ],
+    },
+    {
+      id: "camp-004",
+      name: "Holiday Special Promotion",
+      status: "paused",
+      objective: "Drive holiday season sales",
+      budget: 60000,
+      startDate: "2025-11-01",
+      endDate: "2025-12-25",
+      platforms: ["Facebook", "Instagram", "Google Ads", "Pinterest"],
+      audience: "Shoppers, Gift buyers",
+      creatives: [
+        {
+          id: "cr-009",
+          type: "image",
+          name: "Holiday Banner Set",
+          status: "approved",
+          thumbnail: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        },
+        {
+          id: "cr-010",
+          type: "video",
+          name: "Holiday Promo 30s",
+          status: "approved",
+        },
+      ],
+    },
+    {
+      id: "camp-005",
+      name: "Customer Retention Campaign",
+      status: "completed",
+      objective: "Increase customer loyalty and repeat purchases",
+      budget: 18000,
+      startDate: "2025-09-01",
+      endDate: "2025-09-30",
+      platforms: ["Email", "Facebook", "Instagram"],
+      audience: "Existing customers",
+      creatives: [
+        {
+          id: "cr-011",
+          type: "image",
+          name: "Loyalty Program Banner",
+          status: "approved",
+          thumbnail: "https://images.pexels.com/photos/3184287/pexels-photo-3184287.jpeg?auto=compress&cs=tinysrgb&w=400",
         },
       ],
     },
@@ -242,47 +354,178 @@ export const MarketingStudio: React.FC = () => {
     }
   };
 
+  const filteredCampaigns = approvedCampaigns.filter((campaign) => {
+    const matchesStatus = statusFilter === "all" || campaign.status === statusFilter;
+    const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
+  const campaignStats = {
+    total: approvedCampaigns.length,
+    approved: approvedCampaigns.filter((c) => c.status === "approved").length,
+    running: approvedCampaigns.filter((c) => c.status === "running").length,
+    paused: approvedCampaigns.filter((c) => c.status === "paused").length,
+    completed: approvedCampaigns.filter((c) => c.status === "completed").length,
+    totalBudget: approvedCampaigns.reduce((sum, c) => sum + c.budget, 0),
+  };
+
   const renderCampaignDetails = () => (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-6`}>
-            <h3 className={`text-lg font-semibold ${themeClasses.text} mb-4`}>
-              Approved Campaigns
-            </h3>
-            <div className="space-y-3">
-              {approvedCampaigns.map((campaign) => (
-                <div
-                  key={campaign.id}
-                  onClick={() => setSelectedCampaign(campaign)}
-                  className={`p-4 rounded-xl cursor-pointer transition-all ${
-                    selectedCampaign?.id === campaign.id
-                      ? `${themeClasses.gradient} border ${themeClasses.border}`
-                      : `${themeClasses.hover} border ${themeClasses.border}`
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className={`font-semibold ${selectedCampaign?.id === campaign.id ? themeClasses.text : themeClasses.text}`}>
-                      {campaign.name}
-                    </h4>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(campaign.status)}`}>
-                      {campaign.status}
-                    </span>
-                  </div>
-                  <p className={`text-sm ${themeClasses.textSecondary}`}>
-                    Budget: ${campaign.budget.toLocaleString()}
-                  </p>
-                  <p className={`text-xs ${themeClasses.textSecondary} mt-1`}>
-                    {campaign.platforms.length} platforms • {campaign.creatives.length} creatives
-                  </p>
-                </div>
-              ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-5 hover:shadow-lg transition-all`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-blue-100 rounded-xl">
+              <FolderOpen className="text-blue-600" size={24} />
             </div>
+            <span className="text-2xl font-bold text-blue-600">{campaignStats.total}</span>
+          </div>
+          <h3 className={`font-semibold ${themeClasses.text}`}>Total Campaigns</h3>
+          <p className={`text-sm ${themeClasses.textSecondary}`}>All campaigns in system</p>
+        </div>
+
+        <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-5 hover:shadow-lg transition-all`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-green-100 rounded-xl">
+              <CheckCircle className="text-green-600" size={24} />
+            </div>
+            <span className="text-2xl font-bold text-green-600">{campaignStats.approved}</span>
+          </div>
+          <h3 className={`font-semibold ${themeClasses.text}`}>Approved</h3>
+          <p className={`text-sm ${themeClasses.textSecondary}`}>Ready to launch</p>
+        </div>
+
+        <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-5 hover:shadow-lg transition-all`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-blue-100 rounded-xl">
+              <Play className="text-blue-600" size={24} />
+            </div>
+            <span className="text-2xl font-bold text-blue-600">{campaignStats.running}</span>
+          </div>
+          <h3 className={`font-semibold ${themeClasses.text}`}>Running</h3>
+          <p className={`text-sm ${themeClasses.textSecondary}`}>Currently live</p>
+        </div>
+
+        <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-5 hover:shadow-lg transition-all`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-purple-100 rounded-xl">
+              <DollarSign className="text-purple-600" size={24} />
+            </div>
+            <span className="text-2xl font-bold text-purple-600">
+              ${(campaignStats.totalBudget / 1000).toFixed(0)}K
+            </span>
+          </div>
+          <h3 className={`font-semibold ${themeClasses.text}`}>Total Budget</h3>
+          <p className={`text-sm ${themeClasses.textSecondary}`}>Across all campaigns</p>
+        </div>
+      </div>
+
+      <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-6`}>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h3 className={`text-xl font-semibold ${themeClasses.text} mb-1`}>Campaign List</h3>
+            <p className={`text-sm ${themeClasses.textSecondary}`}>
+              {filteredCampaigns.length} campaign{filteredCampaigns.length !== 1 ? "s" : ""} found
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                type="text"
+                placeholder="Search campaigns..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`pl-10 pr-4 py-2 ${themeClasses.cardBg} ${themeClasses.border} border rounded-lg text-sm ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64`}
+              />
+            </div>
+
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className={`px-4 py-2 ${themeClasses.cardBg} ${themeClasses.border} border rounded-lg text-sm ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            >
+              <option value="all">All Status</option>
+              <option value="approved">Approved</option>
+              <option value="running">Running</option>
+              <option value="paused">Paused</option>
+              <option value="completed">Completed</option>
+            </select>
           </div>
         </div>
 
-        {selectedCampaign && (
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filteredCampaigns.map((campaign) => (
+            <div
+              key={campaign.id}
+              onClick={() => setSelectedCampaign(campaign)}
+              className={`p-5 rounded-xl cursor-pointer transition-all border-2 ${
+                selectedCampaign?.id === campaign.id
+                  ? "border-blue-500 bg-blue-50 shadow-lg"
+                  : `${themeClasses.border} ${themeClasses.hover}`
+              }`}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <h4 className={`font-bold ${themeClasses.text} text-lg`}>{campaign.name}</h4>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(campaign.status)}`}>
+                  {campaign.status}
+                </span>
+              </div>
+
+              <p className={`text-sm ${themeClasses.textSecondary} mb-4 line-clamp-2`}>
+                {campaign.objective}
+              </p>
+
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs ${themeClasses.textSecondary}`}>Budget</span>
+                  <span className={`text-sm font-bold ${themeClasses.text}`}>
+                    ${campaign.budget.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs ${themeClasses.textSecondary}`}>Duration</span>
+                  <span className={`text-sm font-semibold ${themeClasses.text}`}>
+                    {Math.ceil(
+                      (new Date(campaign.endDate).getTime() - new Date(campaign.startDate).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    )}{" "}
+                    days
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                <div className="flex items-center space-x-1">
+                  <Globe className="text-gray-400" size={14} />
+                  <span className={`text-xs ${themeClasses.textSecondary}`}>
+                    {campaign.platforms.length} platforms
+                  </span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <ImageIcon className="text-gray-400" size={14} />
+                  <span className={`text-xs ${themeClasses.textSecondary}`}>
+                    {campaign.creatives.length} creatives
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredCampaigns.length === 0 && (
+          <div className="text-center py-12">
+            <AlertCircle className="mx-auto text-gray-400 mb-3" size={48} />
+            <p className={`text-lg font-semibold ${themeClasses.text} mb-1`}>No campaigns found</p>
+            <p className={`text-sm ${themeClasses.textSecondary}`}>
+              Try adjusting your filters or search query
+            </p>
+          </div>
+        )}
+      </div>
+
+      {selectedCampaign && (
+        <div className="space-y-6">
             <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-6`}>
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -402,40 +645,78 @@ export const MarketingStudio: React.FC = () => {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 
-  const renderOptimization = () => (
+  const renderScheduler = () => (
     <div className="space-y-6">
-      <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-6`}>
-        <div className="flex items-center space-x-3 mb-6">
-          <Target className="text-purple-600" size={24} />
-          <div>
-            <h3 className={`text-xl font-semibold ${themeClasses.text}`}>
-              Campaign Optimization
-            </h3>
-            <p className={`text-sm ${themeClasses.textSecondary}`}>
-              Platform selection and scheduling optimization
-            </p>
+      {selectedCampaign && (
+        <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-2xl p-6`}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className={`text-xl font-semibold ${themeClasses.text}`}>
+                Schedule Campaign: {selectedCampaign.name}
+              </h3>
+              <p className={`text-sm ${themeClasses.textSecondary}`}>
+                Plan optimal timing for maximum impact
+              </p>
+            </div>
+            <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Plus size={18} />
+              <span>Add to Calendar</span>
+            </button>
           </div>
-        </div>
 
-        {selectedCampaign && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-xl p-5`}>
-              <h4 className={`font-semibold ${themeClasses.text} mb-4`}>Platform Selection</h4>
+              <h4 className={`font-semibold ${themeClasses.text} mb-4 flex items-center`}>
+                <Calendar className="mr-2 text-blue-600" size={20} />
+                Campaign Dates
+              </h4>
               <div className="space-y-3">
+                <div>
+                  <label className={`text-xs ${themeClasses.textSecondary} mb-1 block`}>Start Date</label>
+                  <input
+                    type="date"
+                    value={selectedCampaign.startDate}
+                    className={`w-full px-3 py-2 ${themeClasses.cardBg} ${themeClasses.border} border rounded-lg text-sm ${themeClasses.text}`}
+                  />
+                </div>
+                <div>
+                  <label className={`text-xs ${themeClasses.textSecondary} mb-1 block`}>End Date</label>
+                  <input
+                    type="date"
+                    value={selectedCampaign.endDate}
+                    className={`w-full px-3 py-2 ${themeClasses.cardBg} ${themeClasses.border} border rounded-lg text-sm ${themeClasses.text}`}
+                  />
+                </div>
+                <div className="pt-2">
+                  <p className={`text-xs ${themeClasses.textSecondary}`}>Duration</p>
+                  <p className={`text-lg font-bold ${themeClasses.text}`}>
+                    {Math.ceil(
+                      (new Date(selectedCampaign.endDate).getTime() -
+                        new Date(selectedCampaign.startDate).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    )}{" "}
+                    days
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-xl p-5`}>
+              <h4 className={`font-semibold ${themeClasses.text} mb-4 flex items-center`}>
+                <Globe className="mr-2 text-purple-600" size={20} />
+                Selected Platforms
+              </h4>
+              <div className="space-y-2">
                 {selectedCampaign.platforms.map((platform, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50"
+                    className="flex items-center justify-between p-2 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50"
                   >
-                    <div className="flex items-center space-x-3">
-                      <Globe className="text-blue-600" size={20} />
-                      <span className={`font-medium ${themeClasses.text}`}>{platform}</span>
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                    <span className={`font-medium text-sm ${themeClasses.text}`}>{platform}</span>
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
                       Active
                     </span>
                   </div>
@@ -444,53 +725,39 @@ export const MarketingStudio: React.FC = () => {
             </div>
 
             <div className={`${themeClasses.cardBg} ${themeClasses.border} border rounded-xl p-5`}>
-              <h4 className={`font-semibold ${themeClasses.text} mb-4`}>AI Optimization Insights</h4>
+              <h4 className={`font-semibold ${themeClasses.text} mb-4 flex items-center`}>
+                <Sparkles className="mr-2 text-orange-600" size={20} />
+                AI Recommendations
+              </h4>
               <div className="space-y-3">
-                <div className="flex items-start space-x-3 p-3 rounded-lg bg-green-50">
-                  <ThumbsUp className="text-green-600 mt-0.5" size={18} />
+                <div className="flex items-start space-x-2 p-2 rounded-lg bg-green-50">
+                  <ThumbsUp className="text-green-600 mt-0.5 flex-shrink-0" size={16} />
                   <div>
-                    <p className={`text-sm font-medium ${themeClasses.text}`}>
-                      Optimal Platform Mix
-                    </p>
-                    <p className={`text-xs ${themeClasses.textSecondary}`}>
-                      Current selection provides 92% audience coverage
-                    </p>
+                    <p className={`text-xs font-medium ${themeClasses.text}`}>Best Launch Window</p>
+                    <p className={`text-xs ${themeClasses.textSecondary}`}>Oct 15-18 recommended</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3 p-3 rounded-lg bg-blue-50">
-                  <Clock className="text-blue-600 mt-0.5" size={18} />
+                <div className="flex items-start space-x-2 p-2 rounded-lg bg-blue-50">
+                  <Clock className="text-blue-600 mt-0.5 flex-shrink-0" size={16} />
                   <div>
-                    <p className={`text-sm font-medium ${themeClasses.text}`}>
-                      Best Launch Window
-                    </p>
-                    <p className={`text-xs ${themeClasses.textSecondary}`}>
-                      Recommended: Oct 15-18 for maximum engagement
-                    </p>
+                    <p className={`text-xs font-medium ${themeClasses.text}`}>Peak Hours</p>
+                    <p className={`text-xs ${themeClasses.textSecondary}`}>6-9 PM weekdays</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3 p-3 rounded-lg bg-purple-50">
-                  <Zap className="text-purple-600 mt-0.5" size={18} />
+                <div className="flex items-start space-x-2 p-2 rounded-lg bg-purple-50">
+                  <Target className="text-purple-600 mt-0.5 flex-shrink-0" size={16} />
                   <div>
-                    <p className={`text-sm font-medium ${themeClasses.text}`}>
-                      Budget Allocation
-                    </p>
-                    <p className={`text-xs ${themeClasses.textSecondary}`}>
-                      Optimal split: 40% FB, 30% IG, 20% Google, 10% LinkedIn
-                    </p>
+                    <p className={`text-xs font-medium ${themeClasses.text}`}>Avoid Conflicts</p>
+                    <p className={`text-xs ${themeClasses.textSecondary}`}>2 campaigns overlap</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      <div>
-        <h3 className={`text-lg font-semibold ${themeClasses.text} mb-4`}>
-          Campaign Scheduling
-        </h3>
-        <PromotionCalendar />
-      </div>
+      <PromotionCalendar />
     </div>
   );
 
@@ -817,7 +1084,7 @@ export const MarketingStudio: React.FC = () => {
         </div>
 
         {activeSection === "details" && renderCampaignDetails()}
-        {activeSection === "optimization" && renderOptimization()}
+        {activeSection === "scheduler" && renderScheduler()}
         {activeSection === "execution" && renderExecution()}
         {activeSection === "performance" && renderPerformance()}
       </div>
