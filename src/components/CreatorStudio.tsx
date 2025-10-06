@@ -594,7 +594,7 @@ const mockAssets: GeneratedAsset[] = Array.from({ length: 6 }, (_, index) => ({
       </div>}
 
       {/* Prompt Input */}
-      <div className={`${themeClasses.cardBg} rounded-3xl p-8 ${themeClasses.shadow} border-2 ${themeClasses.border}`}>
+      {(verificationStatus === 'passed' || contentType =="image" || contentType =="video")?<div className={`${themeClasses.cardBg} rounded-3xl p-8 ${themeClasses.shadow} border-2 ${themeClasses.border} `}>
         <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center`}>
           <Wand2 className="mr-3 text-blue-500" size={28} />
           Creative Prompt
@@ -619,7 +619,7 @@ const mockAssets: GeneratedAsset[] = Array.from({ length: 6 }, (_, index) => ({
             </button>
           </div>
         </div>
-      </div>
+      </div>:null}
 
 
 
@@ -848,7 +848,7 @@ const mockAssets: GeneratedAsset[] = Array.from({ length: 6 }, (_, index) => ({
           )}
         </button>
       </div>}
-{generatedAssets.length&&<div className="flex justify-center">
+{generatedAssets.length?<div className="flex justify-center">
        <button
                 onClick={handleSaveAssets}
                 disabled={selectedAssets.length === 0 || isGenerating}
@@ -856,7 +856,7 @@ const mockAssets: GeneratedAsset[] = Array.from({ length: 6 }, (_, index) => ({
               >
                Save and next ({selectedAssets.length})
               </button>
-      </div>}
+      </div>:null}
     </div>
   );
 
@@ -1236,7 +1236,7 @@ const [approvalFlag,setApprovalFlag] = useState<boolean>()
             Select a campaign to create targeted creatives, or proceed without a campaign for general assets
           </p>
         </div>
-        <Target className={`${themeClasses.textSecondary}`} size={24} />
+        {/* <Target className={`${themeClasses.textSecondary}`} size={24} /> */}
       </div>
 
       <div className="relative">
