@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Image as ImageIcon, Video, Wand2, Settings, Download, Share2, RefreshCw, Plus, ChevronDown, Play, Pause, Eye, Heart, MessageCircle, Send, Check, X, ArrowRight, ArrowLeft, Upload, Palette, Type, LayoutGrid as Layout, Zap, Brain, Cpu, Database, CheckCircle, Clock, AlertCircle, CreditCard as Edit3, Copy, Trash2, MoreHorizontal, Instagram, Facebook, Twitter, Youtube, Linkedin, Globe, Smartphone, Monitor, Tablet, Star, Layers, Filter, Maximize2, Minimize2, BarChart3 as BarChart3Icon, Target, AlertTriangle, FileType } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { Chatbot } from './Chatbot';
 import video_file from "./video.mp4"
 import img_1 from "./1.jpg"
 interface GeneratedAsset {
@@ -70,6 +71,8 @@ export const CreatorStudio: React.FC = ({setActiveTab}) => {
   const [newLogoPlacement, setNewLogoPlacement] = useState('');
   const [newFormat, setNewFormat] = useState('');
   const [newStyling, setNewStyling] = useState('');
+  const [showBrandKitModal, setShowBrandKitModal] = useState(false);
+  const [brandKitSection, setBrandKitSection] = useState('logos');
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['instagram']);
   const [previewAsset, setPreviewAsset] = useState<GeneratedAsset | null>(null);
   const [changeRequests, setChangeRequests] = useState('');
@@ -275,7 +278,7 @@ const mockAssets: GeneratedAsset[] = Array.from({ length: 6 }, (_, index) => ({
 
   const renderStepIndicator = () => (
     <div className={`${themeClasses.cardBg} rounded-3xl p-8 mb-8 ${themeClasses.shadow} border-2 ${themeClasses.border}`}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-start gap-64">
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center">
             <div className={`flex items-center space-x-4 ${index < steps.length - 1 ? 'flex-1' : ''}`}>
@@ -393,8 +396,7 @@ const mockAssets: GeneratedAsset[] = Array.from({ length: 6 }, (_, index) => ({
               <ChevronDown className={`absolute right-4 top-1/2 transform -translate-y-1/2 ${themeClasses.textSecondary}`} size={24} />
             </div>
             <button
-              onClick={() => setShowAddBrandKit(true)}
-            //  onClick={() => setActiveStep("brandkit")}
+              onClick={() => setShowBrandKitModal(true)}
               className="flex items-center text-blue-600 hover:text-blue-700 transition-colors font-medium"
             >
               <Plus size={18} className="mr-2" />
@@ -1373,6 +1375,191 @@ const [approvalFlag,setApprovalFlag] = useState<boolean>()
       {activeStep === 2 && renderPreview()}
       {activeStep === 3 && renderSendForApproval()}
       
+      {/* Brand Kit Modal */}
+      {showBrandKitModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+          <div className={`${themeClasses.cardBg} rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-hidden shadow-2xl`}>
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Palette className="text-white" size={28} />
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Brand Kit Manager</h2>
+                  <p className="text-blue-100 text-sm">Create and manage your brand assets</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowBrandKitModal(false)}
+                className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                <X className="text-white" size={24} />
+              </button>
+            </div>
+
+            {/* Section Navigation */}
+            <div className={`p-4 border-b ${themeClasses.border}`}>
+              <div className="flex space-x-2 overflow-x-auto">
+                {[
+                  { id: 'logos', label: 'Logos', icon: ImageIcon },
+                  { id: 'colors', label: 'Color Palettes', icon: Palette },
+                  { id: 'fonts', label: 'Fonts', icon: Type },
+                  { id: 'images', label: 'Image Style', icon: ImageIcon }
+                ].map((section) => {
+                  const Icon = section.icon;
+                  return (
+                    <button
+                      key={section.id}
+                      onClick={() => setBrandKitSection(section.id)}
+                      className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-300 whitespace-nowrap ${
+                        brandKitSection === section.id
+                          ? 'bg-blue-500 text-white shadow-lg'
+                          : `${themeClasses.text} ${themeClasses.hover}`
+                      }`}
+                    >
+                      <Icon size={16} className="mr-2" />
+                      <span className="text-sm">{section.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+              {brandKitSection === 'logos' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className={`text-xl font-semibold ${themeClasses.text}`}>Logos</h3>
+                      <p className={`${themeClasses.textSecondary} text-sm mt-1`}>
+                        Save multiple logos to easily apply while generating assets
+                      </p>
+                    </div>
+                    <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+                      <Upload size={18} className="mr-2" />
+                      Upload Logo
+                    </button>
+                  </div>
+
+                  <div className={`border-2 border-dashed ${themeClasses.border} rounded-2xl p-12 text-center ${themeClasses.hover} transition-all cursor-pointer`}>
+                    <Upload className={`${themeClasses.textSecondary} mx-auto mb-4`} size={48} />
+                    <h4 className={`${themeClasses.text} font-medium mb-2`}>Drop logo files here</h4>
+                    <p className={`${themeClasses.textSecondary} text-sm`}>or click to browse (SVG, PNG, JPG)</p>
+                  </div>
+                </div>
+              )}
+
+              {brandKitSection === 'colors' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className={`text-xl font-semibold ${themeClasses.text}`}>Color Palettes</h3>
+                      <p className={`${themeClasses.textSecondary} text-sm mt-1`}>
+                        Define your brand colors for consistent styling
+                      </p>
+                    </div>
+                    <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+                      <Plus size={18} className="mr-2" />
+                      New Color
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { name: 'Primary', hex: '#3B82F6' },
+                      { name: 'Secondary', hex: '#10B981' },
+                      { name: 'Accent', hex: '#F59E0B' },
+                      { name: 'Dark', hex: '#1F2937' }
+                    ].map((color, idx) => (
+                      <div key={idx} className={`${themeClasses.border} border rounded-xl p-4`}>
+                        <div
+                          className="aspect-square rounded-lg mb-3 cursor-pointer hover:scale-105 transition-transform"
+                          style={{ backgroundColor: color.hex }}
+                        />
+                        <h4 className={`${themeClasses.text} font-medium text-sm`}>{color.name}</h4>
+                        <p className={`${themeClasses.textSecondary} text-xs mt-1`}>{color.hex}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {brandKitSection === 'fonts' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className={`text-xl font-semibold ${themeClasses.text}`}>Fonts</h3>
+                      <p className={`${themeClasses.textSecondary} text-sm mt-1`}>
+                        Set typography standards for your brand
+                      </p>
+                    </div>
+                    <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+                      <Plus size={18} className="mr-2" />
+                      Add Font
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {['Inter', 'Roboto'].map((font, idx) => (
+                      <div key={idx} className={`${themeClasses.border} border rounded-xl p-6`}>
+                        <div className={`${themeClasses.gradient} rounded-xl p-4 mb-4`}>
+                          <div className={`text-3xl font-bold ${themeClasses.text}`} style={{ fontFamily: font }}>
+                            Aa
+                          </div>
+                        </div>
+                        <h4 className={`${themeClasses.text} font-medium`}>{font}</h4>
+                        <p className={`${themeClasses.textSecondary} text-sm mt-1`}>Primary Font</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {brandKitSection === 'images' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className={`text-xl font-semibold ${themeClasses.text}`}>Image Style</h3>
+                      <p className={`${themeClasses.textSecondary} text-sm mt-1`}>
+                        Define visual style guidelines for your brand
+                      </p>
+                    </div>
+                    <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+                      <Upload size={18} className="mr-2" />
+                      Upload Style
+                    </button>
+                  </div>
+
+                  <div className={`border-2 border-dashed ${themeClasses.border} rounded-2xl p-12 text-center ${themeClasses.hover} transition-all cursor-pointer`}>
+                    <ImageIcon className={`${themeClasses.textSecondary} mx-auto mb-4`} size={48} />
+                    <h4 className={`${themeClasses.text} font-medium mb-2`}>Upload reference images</h4>
+                    <p className={`${themeClasses.textSecondary} text-sm`}>Define your brand's visual style</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className={`p-6 border-t ${themeClasses.border} flex justify-end space-x-3`}>
+              <button
+                onClick={() => setShowBrandKitModal(false)}
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowBrandKitModal(false);
+                }}
+                className="px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
+              >
+                Save Brand Kit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Add Brand Kit Modal */}
       {showAddBrandKit && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3">
@@ -1626,6 +1813,9 @@ const [approvalFlag,setApprovalFlag] = useState<boolean>()
           </div>
         </div>
       )}
+
+      {/* Chatbot */}
+      {/* <Chatbot currentPage="Creator Studio" /> */}
     </div>
           <style jsx>{`
         @keyframes fade-in {
